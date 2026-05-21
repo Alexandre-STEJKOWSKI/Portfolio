@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexandre Stejkowski — Cybersécurité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060b14;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.10);
+  --glass-hover: rgba(255,255,255,0.08);
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --accent3: #8b5cf6;
+  --text: #f0f4ff;
+  --muted: rgba(240,244,255,0.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.15;animation:drift 20s ease-in-out infinite}
+.orb1{width:600px;height:600px;background:#3b82f6;top:-200px;left:-200px}
+.orb2{width:500px;height:500px;background:#8b5cf6;bottom:-150px;right:-150px;animation-delay:-7s}
+.orb3{width:400px;height:400px;background:#06b6d4;top:40%;left:40%;animation-delay:-14s}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.05)}66%{transform:translate(-30px,40px) scale(0.95)}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(59,130,246,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.03) 1px,transparent 1px);background-size:60px 60px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(6,11,20,0.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:1.5rem;list-style:none;flex-wrap:wrap}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+
+main{position:relative;z-index:1}
+section{padding:6rem 3rem;max-width:1100px;margin:0 auto}
+
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:5rem;max-width:100%;padding-left:8vw;padding-right:8vw;position:relative}
+.hero-eyebrow{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent2);font-weight:500;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--accent2)}
+.hero-name{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,8vw,7rem);font-weight:800;line-height:0.95;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.hero-name .grad{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 50%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:2.5rem;font-weight:300}
+.hero-tags{display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:3rem}
+.tag{padding:0.35rem 0.9rem;border-radius:100px;background:var(--glass);border:1px solid var(--glass-border);font-size:0.78rem;color:var(--muted);backdrop-filter:blur(10px)}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{padding:0.85rem 2rem;border-radius:100px;background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;text-decoration:none;font-weight:600;font-size:0.9rem;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 0 30px rgba(59,130,246,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(59,130,246,0.5)}
+.btn-ghost{padding:0.85rem 2rem;border-radius:100px;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);text-decoration:none;font-weight:500;font-size:0.9rem;backdrop-filter:blur(10px);transition:background 0.2s}
+.btn-ghost:hover{background:var(--glass-hover)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.4rem;color:var(--muted);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;animation:bounce 2s ease-in-out infinite}
+.scroll-hint::after{content:'↓';font-size:1.1rem}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+.section-label{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem}
+.section-label::before{content:'';display:block;width:20px;height:1px;background:var(--accent)}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.1;letter-spacing:-0.02em;margin-bottom:3rem}
+
+.glass{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;backdrop-filter:blur(20px);transition:background 0.3s,border-color 0.3s,transform 0.3s}
+.glass:hover{background:var(--glass-hover);border-color:rgba(59,130,246,0.2);transform:translateY(-3px)}
+
+/* EXP */
+.exp-list{display:flex;flex-direction:column;gap:1.5rem}
+.exp-card{padding:2rem 2.5rem}
+.exp-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem}
+.exp-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:0.25rem}
+.exp-company{color:var(--accent2);font-size:0.88rem;font-weight:500}
+.exp-period{padding:0.3rem 0.9rem;border-radius:100px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);font-size:0.72rem;color:var(--accent);white-space:nowrap;font-weight:500}
+.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:0.45rem}
+.exp-bullets li{color:var(--muted);font-size:0.88rem;line-height:1.6;padding-left:1.25rem;position:relative}
+.exp-bullets li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:0.78rem}
+.exp-tools{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1.25rem}
+.tool-badge{padding:0.22rem 0.7rem;border-radius:100px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:0.7rem;color:#a78bfa;font-weight:500}
+.exp-docs{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem}
+.doc-link{display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.9rem;border-radius:100px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);color:var(--accent2);text-decoration:none;font-size:0.75rem;font-weight:500;transition:all 0.2s}
+.doc-link:hover{background:rgba(6,182,212,0.18);border-color:var(--accent2)}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.25rem}
+.skill-card{padding:1.6rem}
+.skill-cat{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent2);font-weight:600;margin-bottom:0.6rem}
+.skill-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.75rem}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.35rem}
+.skill-tag{padding:0.18rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);font-size:0.7rem;color:var(--muted)}
+
+/* FORMATION */
+.formation-list{display:flex;flex-direction:column;gap:1rem}
+.formation-card{padding:1.6rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.formation-degree{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.25rem}
+.formation-school{color:var(--muted);font-size:0.83rem}
+.formation-year{color:var(--accent);font-size:0.8rem;font-weight:600;white-space:nowrap}
+
+/* TABS */
+.tabs-row{display:flex;gap:0.6rem;margin-bottom:2rem;flex-wrap:wrap}
+.tab-btn{padding:0.5rem 1.25rem;border-radius:100px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px);font-family:'DM Sans',sans-serif}
+.tab-btn.active,.tab-btn:hover{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:var(--accent2)}
+.tab-panel{display:none}
+.tab-panel.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+
+/* PROJECTS */
+.project-card{padding:1.75rem}
+.project-icon{font-size:1.6rem;margin-bottom:1rem}
+.project-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem}
+.project-desc{color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1rem}
+.project-stack{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.9rem}
+.project-links{display:flex;flex-wrap:wrap;gap:0.5rem}
+.project-link{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.75rem;font-weight:500;text-decoration:none;transition:all 0.2s}
+.pl-doc{background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);color:var(--accent2)}
+.pl-doc:hover{background:rgba(6,182,212,0.18)}
+.pl-ext{background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);color:#a78bfa}
+.pl-ext:hover{background:rgba(139,92,246,0.18)}
+
+/* CERTIF */
+.cert-tabs-row{display:flex;gap:0.6rem;margin-bottom:2rem;flex-wrap:wrap}
+.cert-tab-btn{padding:0.5rem 1.25rem;border-radius:100px;background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px);font-family:'DM Sans',sans-serif}
+.cert-tab-btn.active,.cert-tab-btn:hover{background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.3);color:var(--accent2)}
+.cert-panel{display:none}
+.cert-panel.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.cert-card{padding:1.5rem;display:flex;flex-direction:column;gap:0.75rem}
+.cert-img{width:100%;max-height:120px;object-fit:contain;border-radius:10px;background:rgba(255,255,255,0.03);padding:0.5rem}
+.cert-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700}
+.cert-desc{color:var(--muted);font-size:0.82rem;line-height:1.6;flex:1}
+.cert-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.cert-date{font-size:0.72rem;color:var(--accent);font-weight:600}
+
+/* VEILLE */
+.veille-intro{background:var(--glass);border:1px solid var(--glass-border);border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.9rem;line-height:1.7}
+.veille-tools-row{display:flex;gap:0.6rem;margin-bottom:2rem;flex-wrap:wrap}
+.veille-tool{padding:0.45rem 1.1rem;border-radius:100px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:0.8rem;color:#a78bfa;font-weight:500;text-decoration:none;transition:background 0.2s}
+.veille-tool:hover{background:rgba(139,92,246,0.2)}
+.veille-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+.veille-card{padding:1.75rem}
+.veille-img{width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:1rem}
+
+/* CONTACT */
+.contact-wrap{display:flex;justify-content:center}
+.contact-card{display:flex;flex-direction:column;align-items:center;gap:2rem;padding:3.5rem 4rem;border-radius:24px;max-width:600px;width:100%;text-align:center}
+.contact-links{display:flex;flex-wrap:wrap;justify-content:center;gap:0.75rem}
+.contact-link{display:flex;align-items:center;gap:0.5rem;padding:0.65rem 1.4rem;border-radius:100px;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);text-decoration:none;font-size:0.83rem;font-weight:500;backdrop-filter:blur(10px);transition:all 0.2s}
+.contact-link:hover{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:var(--accent2)}
+
+footer{position:relative;z-index:1;text-align:center;padding:2rem;border-top:1px solid var(--glass-border);color:var(--muted);font-size:0.75rem}
+
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  section{padding:4rem 1.5rem}
+  #hero{padding-left:1.5rem;padding-right:1.5rem}
+  .contact-card{padding:2rem 1.5rem}
+  .exp-card{padding:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<nav>
+  <div class="nav-logo">A.Stejkowski</div>
+  <ul class="nav-links">
+    <li><a href="#experience">Expérience</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#formation">Formation</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#veille">Veille</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-eyebrow">Disponible — Alternance cybersécurité 2026</div>
+    <h1 class="hero-name">Alexandre<br><span class="grad">Stejkowski</span></h1>
+    <p class="hero-sub">Alternant Analyste SOC · Futur Administrateur d'infrastructures sécurisées.<br>Je traque les menaces, analyse les vulnérabilités et sécurise les systèmes.</p>
+    <div class="hero-tags">
+      <span class="tag">SOC Analyst</span><span class="tag">Pentest</span><span class="tag">Fortigate</span>
+      <span class="tag">Wireshark</span><span class="tag">TryHackMe · K0LD.Alex</span>
+      <span class="tag">Anglais B2</span><span class="tag">Asnières-sur-Seine (92)</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Me contacter</a>
+      <a href="#experience" class="btn-ghost">Voir mon parcours</a>
+    </div>
+    <div class="scroll-hint">scroll</div>
+  </section>
+
+  <!-- EXPÉRIENCES -->
+  <section id="experience">
+    <div class="fade-in"><div class="section-label">Expérience</div><h2 class="section-title">Ce que j'ai accompli</h2></div>
+    <div class="exp-list">
+
+      <div class="glass exp-card fade-in">
+        <div class="exp-header">
+          <div><div class="exp-title">Alternant Analyste SOC / Cybersécurité</div><div class="exp-company">EVORIEL — Lille</div></div>
+          <span class="exp-period">2025 – 2026 · 1 an</span>
+        </div>
+        <ul class="exp-bullets">
+          <li>Traitement de tickets SOC : analyse et réponse aux incidents de phishing</li>
+          <li>Création et amélioration de règles de détection</li>
+          <li>Identification et analyse de vulnérabilités via Hackuity</li>
+          <li>Analyse des flux réseau et gestion des règles firewall Fortigate</li>
+          <li>Développement de dashboards sécurité (Power BI, API Wiz, GLPI, SoSafe)</li>
+          <li>Automatisation des tests d'intrusion via Pentera</li>
+        </ul>
+        <div class="exp-tools">
+          <span class="tool-badge">Wiz</span><span class="tool-badge">SoSafe</span><span class="tool-badge">Cwatch</span>
+          <span class="tool-badge">Fortinet</span><span class="tool-badge">Hackuity</span><span class="tool-badge">Wireshark</span>
+          <span class="tool-badge">Pentera</span><span class="tool-badge">Power BI</span><span class="tool-badge">GLPI</span>
+        </div>
+      </div>
+
+      <div class="glass exp-card fade-in">
+        <div class="exp-header">
+          <div><div class="exp-title">Stagiaire Support IT / Cybersécurité</div><div class="exp-company">BNP Paribas Cardif — Nanterre</div></div>
+          <span class="exp-period">2023 – 2025 · 3 mois</span>
+        </div>
+        <ul class="exp-bullets">
+          <li>Support utilisateurs, gestion de parc informatique et comptes Active Directory</li>
+          <li>Gestion des incidents et demandes via ServiceNow ITSM · Outil Pirus</li>
+          <li>Formation en cybersécurité et IA générative</li>
+          <li>Projet câble de sécurité MacBook</li>
+        </ul>
+        <div class="exp-tools">
+          <span class="tool-badge">ServiceNow ITSM</span><span class="tool-badge">Active Directory</span><span class="tool-badge">IA Générative</span>
+        </div>
+        <div class="exp-docs">
+          <a href="parcours/document/Document Rapport de Stage STEJKOWSKIALEXANDRE bts1 (3).pdf" target="_blank" class="doc-link">📄 Rapport de stage BTS1</a>
+          <a href="parcours/document/Document Rapport de Stage.pdf" target="_blank" class="doc-link">📄 Rapport de stage</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPÉTENCES -->
+  <section id="competences">
+    <div class="fade-in"><div class="section-label">Compétences</div><h2 class="section-title">Mon arsenal technique</h2></div>
+    <div class="skills-grid">
+      <div class="glass skill-card fade-in"><div class="skill-cat">SOC & Défense</div><div class="skill-name">Outils SOC</div><div class="skill-tags"><span class="skill-tag">Wiz</span><span class="skill-tag">SoSafe</span><span class="skill-tag">Cwatch</span><span class="skill-tag">Fortinet</span><span class="skill-tag">Hackuity</span><span class="skill-tag">Wireshark</span></div></div>
+      <div class="glass skill-card fade-in"><div class="skill-cat">Offensif</div><div class="skill-name">Pentest</div><div class="skill-tags"><span class="skill-tag">Nmap</span><span class="skill-tag">BurpSuite</span><span class="skill-tag">Gobuster</span><span class="skill-tag">dnsrecon</span><span class="skill-tag">Storm-Breaker</span><span class="skill-tag">Pentera</span></div></div>
+      <div class="glass skill-card fade-in"><div class="skill-cat">Infrastructure</div><div class="skill-name">Réseaux</div><div class="skill-tags"><span class="skill-tag">Cisco Packet Tracer</span><span class="skill-tag">GNS3</span><span class="skill-tag">ESXi</span><span class="skill-tag">Zabbix</span><span class="skill-tag">VPN</span><span class="skill-tag">DNS/DHCP</span><span class="skill-tag">SSH/SMTP</span></div></div>
+      <div class="glass skill-card fade-in"><div class="skill-cat">Virtualisation & OS</div><div class="skill-name">Environnements</div><div class="skill-tags"><span class="skill-tag">Kali Linux</span><span class="skill-tag">Ubuntu</span><span class="skill-tag">Debian</span><span class="skill-tag">Windows Server</span><span class="skill-tag">VMware</span><span class="skill-tag">VirtualBox</span></div></div>
+      <div class="glass skill-card fade-in"><div class="skill-cat">Développement</div><div class="skill-name">Programmation</div><div class="skill-tags"><span class="skill-tag">Python</span><span class="skill-tag">PHP</span><span class="skill-tag">MySQL</span><span class="skill-tag">HTML/CSS</span><span class="skill-tag">Java</span></div></div>
+      <div class="glass skill-card fade-in"><div class="skill-cat">Outils & Normes</div><div class="skill-name">IT & Compliance</div><div class="skill-tags"><span class="skill-tag">ServiceNow ITSM</span><span class="skill-tag">Active Directory</span><span class="skill-tag">Power BI</span><span class="skill-tag">RGPD</span></div></div>
+    </div>
+  </section>
+
+  <!-- FORMATION -->
+  <section id="formation">
+    <div class="fade-in"><div class="section-label">Formation</div><h2 class="section-title">Mon parcours académique</h2></div>
+    <div class="formation-list">
+      <div class="glass formation-card fade-in"><div><div class="formation-degree">Bac+3 — Administrateur d'infrastructures sécurisées</div><div class="formation-school">REDSUP · Clichy</div></div><span class="formation-year">2025 – 2026</span></div>
+      <div class="glass formation-card fade-in"><div><div class="formation-degree">BTS S.I.O option SLAM</div><div class="formation-school">Lycée La Garenne-Colombes</div></div><span class="formation-year">2023 – 2025</span></div>
+      <div class="glass formation-card fade-in"><div><div class="formation-degree">Baccalauréat Professionnel SN / RISC PTECH</div><div class="formation-school">Lycée La Garenne-Colombes</div></div><span class="formation-year">2020 – 2023</span></div>
+    </div>
+  </section>
+
+  <!-- PROJETS -->
+  <section id="projets">
+    <div class="fade-in"><div class="section-label">Projets</div><h2 class="section-title">Ce que j'ai construit</h2></div>
+    <div class="fade-in">
+      <div class="tabs-row">
+        <button class="tab-btn active" onclick="switchTab('proj','reseaux',this)">Réseaux & Sys</button>
+        <button class="tab-btn" onclick="switchTab('proj','code',this)">Code</button>
+        <button class="tab-btn" onclick="switchTab('proj','perso',this)">Personnel</button>
+      </div>
+    </div>
+
+    <div id="proj-reseaux" class="tab-panel active fade-in">
+
+      <div class="glass project-card">
+        <div class="project-icon">🐧</div>
+        <div class="project-title">Installation Debian 12</div>
+        <p class="project-desc">Installation et configuration d'une distribution Debian 12 en environnement virtualisé.</p>
+        <div class="project-stack"><span class="skill-tag">Debian</span><span class="skill-tag">Linux</span></div>
+        <div class="project-links">
+          <a href="Projet/document/Installation_debian_12_alexandre_stejkowski.pdf" target="_blank" class="project-link pl-doc">📄 Documentation</a>
+          <a href="Projet/document/DEBIAN Alexandre STEJKOWSKI 07-2-2024 (2) (1).pdf" target="_blank" class="project-link pl-doc">📄 Rapport</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🌐</div>
+        <div class="project-title">Serveur Apache</div>
+        <p class="project-desc">Déploiement d'un serveur web Apache sur Debian — hébergement et configuration complète.</p>
+        <div class="project-stack"><span class="skill-tag">Apache</span><span class="skill-tag">Debian</span></div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">💡</div>
+        <div class="project-title">Serveur LAMP</div>
+        <p class="project-desc">Installation complète d'une stack LAMP (Linux, Apache, MySQL, PHP) pour hébergement web.</p>
+        <div class="project-stack"><span class="skill-tag">Linux</span><span class="skill-tag">Apache</span><span class="skill-tag">MySQL</span><span class="skill-tag">PHP</span></div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🪟</div>
+        <div class="project-title">Windows Server 2022</div>
+        <p class="project-desc">Déploiement complet d'un environnement Windows Server 2022 avec gestion des rôles.</p>
+        <div class="project-stack"><span class="skill-tag">Windows Server</span><span class="skill-tag">AD</span><span class="skill-tag">GPO</span></div>
+        <div class="project-links">
+          <a href="Projet/document/Windows-Server-2016-AS-_1_.pdf" target="_blank" class="project-link pl-doc">📄 Documentation</a>
+          <a href="Projet/document/installation ws.pdf" target="_blank" class="project-link pl-doc">📄 Rapport installation</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">📂</div>
+        <div class="project-title">Active Directory</div>
+        <p class="project-desc">Configuration d'un AD sur Windows Server — gestion des utilisateurs, groupes et GPO.</p>
+        <div class="project-stack"><span class="skill-tag">Active Directory</span><span class="skill-tag">Windows Server</span></div>
+        <div class="project-links">
+          <a href="Projet/document/AD.pdf" target="_blank" class="project-link pl-doc">📄 Documentation</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🎫</div>
+        <div class="project-title">GLPI</div>
+        <p class="project-desc">Installation de GLPI sur Debian 12 pour la gestion du parc informatique et des tickets.</p>
+        <div class="project-stack"><span class="skill-tag">GLPI</span><span class="skill-tag">Debian</span><span class="skill-tag">ITSM</span></div>
+        <div class="project-links">
+          <a href="Projet/document/GLPI.pdf" target="_blank" class="project-link pl-doc">📄 Documentation</a>
+          <a href="Projet/document/Rapport_GLPI_Debian12_Stejkowski (2).pdf" target="_blank" class="project-link pl-doc">📄 Rapport</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🐳</div>
+        <div class="project-title">Docker</div>
+        <p class="project-desc">Installation et prise en main de Docker — conteneurisation d'applications et gestion des images.</p>
+        <div class="project-stack"><span class="skill-tag">Docker</span><span class="skill-tag">Conteneurs</span></div>
+        <div class="project-links">
+          <a href="Projet/document/DOCKER.pdf" target="_blank" class="project-link pl-doc">📄 Documentation</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🔒</div>
+        <div class="project-title">Audit MALLET</div>
+        <p class="project-desc">Audit de sécurité avec MALLET — analyse des flux réseau et identification de vulnérabilités.</p>
+        <div class="project-stack"><span class="skill-tag">Audit</span><span class="skill-tag">Sécurité</span></div>
+        <div class="project-links">
+          <a href="Projet/document/mallet.pdf" target="_blank" class="project-link pl-doc">📄 Rapport d'audit</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🔧</div>
+        <div class="project-title">GNS3 — Projet MADSI</div>
+        <p class="project-desc">Installation et configuration d'éléments réseau dans GNS3 — simulation d'infrastructure complète.</p>
+        <div class="project-stack"><span class="skill-tag">GNS3</span><span class="skill-tag">Réseaux</span></div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">👤</div>
+        <div class="project-title">Droits utilisateurs Ubuntu</div>
+        <p class="project-desc">Gestion des droits et permissions utilisateurs sur Ubuntu avec chmod, chown et groupes.</p>
+        <div class="project-stack"><span class="skill-tag">Ubuntu</span><span class="skill-tag">Linux</span><span class="skill-tag">chmod</span></div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">⚖️</div>
+        <div class="project-title">Serveur HA-PROXY</div>
+        <p class="project-desc">Mise en place d'un reverse proxy haute disponibilité pour la distribution de charge.</p>
+        <div class="project-stack"><span class="skill-tag">HAProxy</span><span class="skill-tag">Linux</span><span class="skill-tag">Load balancing</span></div>
+      </div>
+
+    </div>
+
+    <div id="proj-code" class="tab-panel fade-in">
+
+      <div class="glass project-card">
+        <div class="project-icon">🎬</div>
+        <div class="project-title">Site Disney+</div>
+        <p class="project-desc">Création de la page vitrine française et anglaise de la plateforme Disney+ — responsive et bilingue.</p>
+        <div class="project-stack"><span class="skill-tag">HTML</span><span class="skill-tag">CSS</span><span class="skill-tag">JavaScript</span></div>
+        <div class="project-links">
+          <a href="Projet/document/cdc-tech-disney-plus-STEJKOWSKI-Alexandre (2).pdf" target="_blank" class="project-link pl-doc">📄 Cahier des charges</a>
+          <a href="https://alexandre-stejkowski.github.io/STEJKOWSKI-Alexandre-projet-Disney-plus/" target="_blank" class="project-link pl-ext">🔗 Voir le site</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🏅</div>
+        <div class="project-title">Projet J.O 2028</div>
+        <p class="project-desc">Site web permettant de consulter les sports, le calendrier des épreuves et les résultats des JO 2028.</p>
+        <div class="project-stack"><span class="skill-tag">HTML</span><span class="skill-tag">CSS</span><span class="skill-tag">PHP</span><span class="skill-tag">MySQL</span></div>
+        <div class="project-links">
+          <a href="Projet/document/cdc-technique-trame-jo.pdf" target="_blank" class="project-link pl-doc">📄 Cahier des charges</a>
+          <a href="http://stejkowski-alexandre-app-jo.infy.uk/" target="_blank" class="project-link pl-ext">🔗 Voir le site</a>
+        </div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">☕</div>
+        <div class="project-title">Java — Gestion de véhicules</div>
+        <p class="project-desc">Application Java de gestion de véhicules et propriétaires — CRUD complet avec affichage console.</p>
+        <div class="project-stack"><span class="skill-tag">Java</span><span class="skill-tag">POO</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Alexandre-STEJKOWSKI/chc-STEJKOWSKI-Alexandre-Trame-JAVA" target="_blank" class="project-link pl-ext">🔗 GitHub</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="proj-perso" class="tab-panel fade-in">
+
+      <div class="glass project-card">
+        <div class="project-icon">🗑️</div>
+        <div class="project-title">Poubelle connectée IoT</div>
+        <p class="project-desc">Poubelle intelligente développée en C sur carte ESP32 S2 — capteurs, connectivité et logique embarquée.</p>
+        <div class="project-stack"><span class="skill-tag">C</span><span class="skill-tag">ESP32 S2</span><span class="skill-tag">IoT</span></div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">⚽</div>
+        <div class="project-title">Classement Football</div>
+        <p class="project-desc">Script Python affichant le classement de ton club et le résultat du dernier match en temps réel via API.</p>
+        <div class="project-stack"><span class="skill-tag">Python</span><span class="skill-tag">API</span></div>
+      </div>
+
+      <div class="glass project-card">
+        <div class="project-icon">🐉</div>
+        <div class="project-title">Lab Kali Linux</div>
+        <p class="project-desc">Installation et maîtrise de l'environnement Kali Linux — prise en main des outils offensifs et défensifs.</p>
+        <div class="project-stack"><span class="skill-tag">Kali Linux</span><span class="skill-tag">Pentest</span><span class="skill-tag">TryHackMe</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="fade-in"><div class="section-label">Certifications</div><h2 class="section-title">Mes certifications</h2></div>
+    <div class="fade-in">
+      <div class="cert-tabs-row">
+        <button class="cert-tab-btn active" onclick="switchCert('cyber',this)">Cybersécurité</button>
+        <button class="cert-tab-btn" onclick="switchCert('reseau',this)">Réseaux</button>
+        <button class="cert-tab-btn" onclick="switchCert('code',this)">Code</button>
+      </div>
+    </div>
+
+    <div id="cert-cyber" class="cert-panel active fade-in">
+      <div class="glass cert-card">
+        <img src="certification/img/cisco-cyber.png" alt="CISCO Cybersécurité" class="cert-img">
+        <div class="cert-title">CISCO Cybersécurité Essentials</div>
+        <p class="cert-desc">Validation des compétences fondamentales en cybersécurité selon le référentiel CISCO.</p>
+        <div class="cert-footer"><span class="cert-date">Juin 2023</span></div>
+      </div>
+      <div class="glass cert-card">
+        <img src="certification/img/C101.png" alt="Cybersécurité 101" class="cert-img">
+        <div class="cert-title">Cybersécurité 101</div>
+        <p class="cert-desc">Validation avancée des compétences en cybersécurité — attaques, défenses et bonnes pratiques.</p>
+        <div class="cert-footer"><span class="cert-date">Juin 2023</span></div>
+      </div>
+      <div class="glass cert-card">
+        <img src="certification/img/anssi.png" alt="ANSSI" class="cert-img">
+        <div class="cert-title">MOOC ANSSI</div>
+        <p class="cert-desc">Formation de l'ANSSI sur les bonnes pratiques de sécurité, la protection des données et la prévention des cyberattaques.</p>
+        <div class="cert-footer">
+          <span class="cert-date">Novembre 2024</span>
+          <a href="certification/img/Certificat.png.pdf" target="_blank" class="project-link pl-doc" style="font-size:0.7rem">📄 Certificat</a>
+        </div>
+      </div>
+      <div class="glass cert-card">
+        <img src="certification/img/base Kali.png" alt="Kali Linux" class="cert-img">
+        <div class="cert-title">Base Kali Linux</div>
+        <p class="cert-desc">Certification validant les compétences en sécurité offensive avec Kali Linux.</p>
+        <div class="cert-footer"><span class="cert-date">Janvier 2025</span></div>
+      </div>
+    </div>
+
+    <div id="cert-reseau" class="cert-panel fade-in">
+      <div class="glass cert-card">
+        <img src="certification/img/cloud101.png" alt="Cloud 101" class="cert-img">
+        <div class="cert-title">Cloud 101</div>
+        <p class="cert-desc">Certification validant les compétences en conception, déploiement et maintenance d'applications cloud AWS.</p>
+        <div class="cert-footer"><span class="cert-date">Juin 2023</span></div>
+      </div>
+    </div>
+
+    <div id="cert-code" class="cert-panel fade-in">
+      <div class="glass cert-card">
+        <img src="certification/img/sql.png" alt="SQL" class="cert-img">
+        <div class="cert-title">Certification SQL</div>
+        <p class="cert-desc">Validation des compétences en conception et maintenance de bases de données relationnelles.</p>
+        <div class="cert-footer"><span class="cert-date">Novembre 2024</span></div>
+      </div>
+      <div class="glass cert-card">
+        <img src="certification/img/py.png" alt="Python" class="cert-img">
+        <div class="cert-title">Interview Python</div>
+        <p class="cert-desc">Validation des compétences avancées en programmation Python.</p>
+        <div class="cert-footer"><span class="cert-date">Janvier 2025</span></div>
+      </div>
+      <div class="glass cert-card">
+        <img src="certification/img/chatgpt for python.png" alt="ChatGPT Python" class="cert-img">
+        <div class="cert-title">ChatGPT pour Python</div>
+        <p class="cert-desc">Certification sur l'utilisation de l'IA générative pour automatiser des workflows Python.</p>
+        <div class="cert-footer"><span class="cert-date">Janvier 2025</span></div>
+      </div>
+      <div class="glass cert-card">
+        <img src="certification/img/ia.png" alt="IA Générative" class="cert-img">
+        <div class="cert-title">IA Générative</div>
+        <p class="cert-desc">Certification sur les concepts et applications de l'intelligence artificielle générative.</p>
+        <div class="cert-footer"><span class="cert-date">Janvier 2025</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VEILLE -->
+  <section id="veille">
+    <div class="fade-in"><div class="section-label">Veille technologique</div><h2 class="section-title">L'IA dans le sport</h2></div>
+    <div class="fade-in">
+      <div class="veille-intro">La veille informatique est le processus de collecte, d'analyse et de suivi des informations technologiques pour rester à jour sur les nouvelles tendances, innovations et menaces. Ma veille est centrée sur <strong>l'intelligence artificielle dans le monde du sport</strong>.</div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Outils utilisés :</p>
+      <div class="veille-tools-row">
+        <a href="https://feedly.com" target="_blank" class="veille-tool">Feedly</a>
+        <a href="https://www.google.fr/alerts" target="_blank" class="veille-tool">Google Alertes</a>
+        <a href="https://www.linkedin.com" target="_blank" class="veille-tool">LinkedIn</a>
+      </div>
+    </div>
+    <div class="veille-grid fade-in">
+      <div class="glass veille-card">
+        <img src="veille/image/tactiqia.png" alt="Football IA" class="veille-img" onerror="this.style.display='none'">
+        <div class="project-icon">⚽</div>
+        <div class="project-title">L'IA révolutionne le football</div>
+        <p class="project-desc">L'IA développée par Google et Liverpool permet d'entraîner les joueurs à mieux se positionner, tirer et réagir aux contre-offensives en temps réel.</p>
+        <a href="https://www.usine-digitale.fr/article/liverpool-et-google-ont-cree-une-ia-capable-de-conseiller-les-entraineurs-sur-les-tactiques-de-football.N2210137" target="_blank" class="project-link pl-ext">Lire l'article →</a>
+      </div>
+      <div class="glass veille-card">
+        <img src="veille/image/sport.png" alt="Santé sportifs" class="veille-img" onerror="this.style.display='none'">
+        <div class="project-icon">💪</div>
+        <div class="project-title">L'IA et la santé des sportifs</div>
+        <p class="project-desc">L'IA propose des programmes d'entraînement adaptés aux performances quotidiennes grâce à des capteurs intégrés dans les vêtements des athlètes.</p>
+        <a href="https://www.actuia.com/actualite/performance-et-sante-le-sport-a-lere-de-lia/" target="_blank" class="project-link pl-ext">Lire l'article →</a>
+      </div>
+      <div class="glass veille-card">
+        <img src="veille/image/fans.png" alt="Fan experience" class="veille-img" onerror="this.style.display='none'">
+        <div class="project-icon">🎭</div>
+        <div class="project-title">L'IA améliore l'expérience fan</div>
+        <p class="project-desc">L'IA offre aux fans des contenus immersifs et des analyses sportives en temps réel, augmentant leur engagement avec les équipes.</p>
+        <a href="https://sponixtech01.medium.com/how-immersive-fan-experiences-are-redefining-sports-a-complete-guide-4b791a6f2da7" target="_blank" class="project-link pl-ext">Lire l'article →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" style="text-align:center;">
+    <div class="fade-in"><div class="section-label" style="justify-content:center;">Contact</div><h2 class="section-title">Travaillons ensemble</h2></div>
+    <div class="contact-wrap fade-in">
+      <div class="glass contact-card">
+        <p style="color:var(--muted);font-size:0.95rem;line-height:1.8;max-width:400px;">Recherche une alternance cybersécurité de 2 ans à partir de la rentrée 2026.<br><strong style="color:var(--text);">Rythme : 2 semaines cours / 4 semaines entreprise.</strong></p>
+        <div class="contact-links">
+          <a href="mailto:stejkowski.alexandre@yahoo.com" class="contact-link">✉️ stejkowski.alexandre@yahoo.com</a>
+          <a href="tel:0768105940" class="contact-link">📞 07.68.10.59.40</a>
+          <a href="https://www.linkedin.com/in/alexandre-stejkowski" target="_blank" class="contact-link">💼 LinkedIn</a>
+          <a href="https://tryhackme.com/p/K0LD.Alex" target="_blank" class="contact-link">🎯 TryHackMe · K0LD.Alex</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer><p>© 2026 Alexandre Stejkowski · Cybersécurité</p></footer>
+
+<script>
+function switchTab(prefix,id,btn){
+  document.querySelectorAll('[id^="'+prefix+'-"]').forEach(p=>p.classList.remove('active'));
+  btn.closest('.tabs-row').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(prefix+'-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function switchCert(id,btn){
+  document.querySelectorAll('.cert-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.cert-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('cert-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80)});
+},{threshold:0.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

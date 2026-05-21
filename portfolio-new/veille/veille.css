@@ -1,0 +1,143 @@
+/* Style global */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+/* Liens */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Titre principal */
+.Titre {
+    padding: 25px;
+    text-align: center;
+    color: white;
+}
+
+.Titre h1 {
+    margin: 0;
+}
+
+h4{
+    font-size: 27px;
+}
+
+.type h4 {
+    font-size:30px;
+    color: rgb(255, 255, 255);
+
+}
+
+
+/* Définition */
+.definition {
+    color: #f0f0f0;
+    padding: 20px;
+    text-align: justify;
+}
+
+
+.sous-titre {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    margin: 40px auto; /* Ajoute un espace autour */
+}
+
+.sous-titre h3 {
+    width: 350px;
+    border-radius: 10px;
+    background: rgba(253, 252, 252, 0.6);
+    padding: 20px;
+    text-align: center;
+    color: rgb(7, 7, 7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Pour un effet de profondeur */
+}
+
+
+
+/* Ligne des boutons */
+.ligne1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px; /* Espace entre les boutons */
+    margin: 40px auto; /* Centrage vertical */
+}
+
+/* Type de veille */
+.type {
+    margin-top: 40px;
+    color: white;
+    text-align: center;
+}
+
+/* Conteneur principal */
+.contenaire {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin: 40px 0;
+}
+
+/* Rectangle */
+.rectangle {
+    width: 350px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    text-align: justify;
+    color: white;
+}
+
+.rectangle img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.rectangle h2 {
+    margin: 15px 0;
+    font-size: 22px;
+}
+
+.rectangle p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.fullscreen-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1; /* Place la vidéo derrière le contenu */
+}
+
+
+
+/* Boutons */
+.bouton, .rectangle button {
+    background-color: white;
+    color: black;
+    padding: 20px 60px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bouton:hover, .rectangle button:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
